@@ -44,35 +44,25 @@ class Server:
             get hyper index
         """
 
-        db_data = []
+        data = self.indexed_dataset()
+        assert isinstance(index,
+                          int) and index >= 0 and index <= max(data.keys())
 
-        for key, val in self.indexed_dataset().items():
-            db_data.append([key, val])
-
-        st = -1
-        mx = -1
-
-        for i in range(len(db_data)):
-            if db_data[i][0] >= index and st is -1:
-                st = i
-            mx = max(mx, db_data[i][0])
-
-        assert isinstance(index, int) and index >= 0 and index <= mx
-
-        data = []
-        if st != -1:
-            for i in range(page_size):
-                if i + st < len(db_data):
-                    data.append(db_data[st + i][1])
-
+        data_count = 0
+        page_data = []
         next_index = None
-        st += page_size
-        if st < len(db_data):
-            next_index = db_data[st][0]
+
+        for i, info in data.items():
+            if data_count == page_size:
+                next_index = i
+                break
+            if i >= index:
+                page_data.append(info)
+                data_count += 1
 
         return {
             'index': index,
             'next_index': next_index,
-            'page_size': len(data),
-            'data': data
+            'page_size': data_count,
+            'data': page_data
         }
