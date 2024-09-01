@@ -51,17 +51,18 @@ class Server:
         page_data = []
         next_index = None
 
+        st = index if index else 0
         for i, info in data.items():
             if data_count == page_size:
                 next_index = i
                 break
-            if i >= index:
+            if i >= st:
                 page_data.append(info)
                 data_count += 1
 
         return {
             'index': index,
             'next_index': next_index,
-            'page_size': data_count,
+            'page_size': len(page_data),
             'data': page_data
         }
