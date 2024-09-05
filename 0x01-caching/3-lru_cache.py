@@ -23,18 +23,24 @@ class LRUCache(BaseCaching):
         """
         add new key to cach
         """
-        self.cache_data[key] = item
-        if not key or not item or key in self.cache_data:
+        if not key or not item:
             return
 
-        if self.size == self.MAX_ITEMS:
-            rem_key = self.key_qeue[0]
-            del self.key_qeue[0]
-            del self.cache_data[rem_key]
-            self.size -= 1
-            print("DISCARD:", rem_key)
+        if key in self.cache_data:
+            for i in range(len(self.key_qeue)):
+                if self.key_qeue[i] == key:
+                    del self.key_qeue[i]
+                    break
+        else:
+            if self.size == self.MAX_ITEMS:
+                rem_key = self.key_qeue[0]
+                del self.key_qeue[0]
+                del self.cache_data[rem_key]
+                self.size -= 1
+                print("DISCARD:", rem_key)
+            self.size += 1
 
-        self.size += 1
+        self.cache_data[key] = item
         self.key_qeue.append(key)
 
     def get(self, key):
@@ -47,4 +53,5 @@ class LRUCache(BaseCaching):
             if self.key_qeue[i] == key:
                 del self.key_qeue[i]
                 self.key_qeue.append(key)
+                break
         return self.cache_data[key]
