@@ -26,7 +26,6 @@ class FIFOCache(BaseCaching):
         if not key or not item:
             return
 
-        self.cache_data[key] = item
         if key in self.cache_data:
             return
 
@@ -37,6 +36,7 @@ class FIFOCache(BaseCaching):
             self.size -= 1
             print("DISCARD:", rem_key)
 
+        self.cache_data[key] = item
         self.size += 1
         self.key_qeue.append(key)
 
