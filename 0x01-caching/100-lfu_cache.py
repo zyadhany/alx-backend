@@ -27,10 +27,14 @@ class LFUCache(BaseCaching):
             return
 
         if key in self.cache_data:
+            cnt = 0
             for i in range(len(self.key_qeue)):
                 if self.key_qeue[i][0] == key:
+                    cnt = self.key_qeue[i][1]
                     del self.key_qeue[i]
                     break
+            self.cache_data[key] = item
+            self.key_qeue.append([key, cnt + 1])
         else:
             if self.size == self.MAX_ITEMS:
 
@@ -49,8 +53,8 @@ class LFUCache(BaseCaching):
                 self.size -= 1
                 print("DISCARD:", rem_key)
             self.size += 1
-        self.cache_data[key] = item
-        self.key_qeue.append([key, 1])
+            self.cache_data[key] = item
+            self.key_qeue.append([key, 1])
 
     def get(self, key):
         """
