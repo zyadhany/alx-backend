@@ -23,7 +23,7 @@ class FIFOCache(BaseCaching):
         """
         add new key to cach
         """
-        if not key or not item or key in self.cache_data:
+        if not key or not item:
             return
 
         self.cache_data[key] = item
