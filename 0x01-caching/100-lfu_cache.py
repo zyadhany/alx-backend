@@ -38,12 +38,12 @@ class LFUCache(BaseCaching):
         else:
             if self.size == self.MAX_ITEMS:
 
-                mn = 0
+                mn = -1
                 at = -1
                 rem_key = None
 
-                for i in range(self.key_qeue):
-                    if self.key_qeue[i][1] < mn:
+                for i in range(len(self.key_qeue)):
+                    if self.key_qeue[i][1] < mn or mn == -1:
                         at = i
                         mn = self.key_qeue[i][1]
                         rem_key = self.key_qeue[i][0]
