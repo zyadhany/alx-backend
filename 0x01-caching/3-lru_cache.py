@@ -1,12 +1,12 @@
 #!/usr/bin/python3
 """
-2-lifo_cache
+3-lru_cache.py
 """
 
 from base_caching import BaseCaching
 
 
-class LIFOCache(BaseCaching):
+class LRUCache(BaseCaching):
     """
     cach class
     """
@@ -28,8 +28,8 @@ class LIFOCache(BaseCaching):
             return
 
         if self.size == self.MAX_ITEMS:
-            rem_key = self.key_qeue[-1]
-            self.key_qeue.pop()
+            rem_key = self.key_qeue[0]
+            del self.key_qeue[0]
             del self.cache_data[rem_key]
             self.size -= 1
             print("DISCARD:", rem_key)
@@ -43,4 +43,8 @@ class LIFOCache(BaseCaching):
         """
         if not key or key not in self.cache_data:
             return None
+        for i in range(len(self.key_qeue)):
+            if self.key_qeue[i] == key:
+                del self.key_qeue[i]
+                self.key_qeue.append(key)
         return self.cache_data[key]

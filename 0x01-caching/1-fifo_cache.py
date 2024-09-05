@@ -23,6 +23,7 @@ class FIFOCache(BaseCaching):
         """
         add new key to cach
         """
+        self.cache_data[key] = item
         if not key or not item or key in self.cache_data:
             return
 
@@ -34,7 +35,6 @@ class FIFOCache(BaseCaching):
             print("DISCARD:", rem_key)
 
         self.size += 1
-        self.cache_data[key] = item
         self.key_qeue.append(key)
 
     def get(self, key):
