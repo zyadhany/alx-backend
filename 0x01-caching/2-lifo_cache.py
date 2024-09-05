@@ -23,7 +23,11 @@ class LIFOCache(BaseCaching):
         """
         add new key to cach
         """
-        if not key or not item or key in self.cache_data:
+        if not key or not item:
+            return
+
+        if key in self.cache_data:
+            self.cache_data[key] = item
             return
 
         if self.size == self.MAX_ITEMS:

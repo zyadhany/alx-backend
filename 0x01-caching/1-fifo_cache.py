@@ -27,6 +27,7 @@ class FIFOCache(BaseCaching):
             return
 
         if key in self.cache_data:
+            self.cache_data[key] = item
             return
 
         if self.size == self.MAX_ITEMS:
@@ -36,8 +37,8 @@ class FIFOCache(BaseCaching):
             self.size -= 1
             print("DISCARD:", rem_key)
 
-        self.cache_data[key] = item
         self.size += 1
+        self.cache_data[key] = item
         self.key_qeue.append(key)
 
     def get(self, key):
