@@ -23,7 +23,6 @@ class LIFOCache(BaseCaching):
         """
         add new key to cach
         """
-        self.cache_data[key] = item
         if not key or not item or key in self.cache_data:
             return
 
@@ -34,6 +33,7 @@ class LIFOCache(BaseCaching):
             self.size -= 1
             print("DISCARD:", rem_key)
 
+        self.cache_data[key] = item
         self.size += 1
         self.key_qeue.append(key)
 
