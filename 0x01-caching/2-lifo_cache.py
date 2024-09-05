@@ -27,7 +27,7 @@ class LIFOCache(BaseCaching):
             return
 
         if self.size == self.MAX_ITEMS:
-            rem_key = self.key_qeue[0]
+            rem_key = self.key_qeue[-1]
             self.key_qeue.pop()
             del self.cache_data[rem_key]
             self.size -= 1
