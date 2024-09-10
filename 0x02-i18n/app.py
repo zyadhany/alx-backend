@@ -6,7 +6,7 @@ simple Flask
 import flask
 import pytz
 from flask import Flask, render_template, request
-from flask_babel import Babel, gettext
+from flask_babel import Babel, format_datetime
 
 
 class Config:
@@ -50,6 +50,7 @@ def before_request():
     before request
     """
     flask.g.user = get_user()
+    flask.g.time = format_datetime()
 
 
 @babel.localeselector
@@ -97,7 +98,7 @@ def index() -> str:
     """
     return string
     """
-    return render_template('7-index.html')
+    return render_template('index.html')
 
 
 if __name__ == "__main__":
