@@ -24,17 +24,6 @@ app.config.from_object(Config)
 babel = Babel(app)
 
 
-@babel.localeselector
-def get_locale() -> str:
-    """
-    get locale
-    """
-    locale = request.args.get('locale')
-    if locale in app.config['LANGUAGES']:
-        return locale
-    return request.accept_languages.best_match(app.config['LANGUAGES'])
-
-
 users = {
     1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
     2: {"name": "Beyonce", "locale": "en", "timezone": "US/Central"},
@@ -62,12 +51,34 @@ def before_request():
     flask.g.user = get_user()
 
 
+@babel.localeselector
+def get_locale() -> str:
+    """
+    get locale
+    """
+    locale = request.args.get('locale')
+    if locale in app.config['LANGUAGES']:
+        return locale
+
+    user = get_user()
+    if user:
+        locale = user.get('locale')
+        if locale in app.config['LANGUAGES']:
+            return locale
+
+    header_locale = request.headers.get('locale', '')
+    if header_locale in app.config["LANGUAGES"]:
+        return header_locale
+
+    return request.accept_languages.best_match(app.config['LANGUAGES'])
+
+
 @app.route('/')
 def index() -> str:
     """
     return string
     """
-    return render_template('5-index.html')
+    return render_template('6-index.html')
 
 
 if __name__ == "__main__":

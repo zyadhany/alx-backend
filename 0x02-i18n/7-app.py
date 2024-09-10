@@ -4,6 +4,7 @@ simple Flask
 """
 
 import flask
+import pytz
 from flask import Flask, render_template, request
 from flask_babel import Babel, gettext
 
@@ -22,17 +23,6 @@ app = Flask(__name__)
 app.config.from_object(Config)
 
 babel = Babel(app)
-
-
-@babel.localeselector
-def get_locale() -> str:
-    """
-    get locale
-    """
-    locale = request.args.get('locale')
-    if locale in app.config['LANGUAGES']:
-        return locale
-    return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
 users = {
@@ -62,12 +52,52 @@ def before_request():
     flask.g.user = get_user()
 
 
+@babel.localeselector
+def get_locale() -> str:
+    """
+    get locale
+    """
+    locale = request.args.get('locale')
+    if locale in app.config['LANGUAGES']:
+        return locale
+
+    user = get_user()
+    if user:
+        locale = user.get('locale')
+        if locale in app.config['LANGUAGES']:
+            return locale
+
+    header_locale = request.headers.get('locale', '')
+    if header_locale in app.config["LANGUAGES"]:
+        return header_locale
+
+    return request.accept_languages.best_match(app.config['LANGUAGES'])
+
+
+@babel.timezoneselector
+def get_timezone() -> str:
+    """
+    get timezone
+    """
+    local = request.args.get('timezone')
+    if not local:
+        user = get_user()
+        if user:
+            local = user.get('timezone')
+
+    if local:
+        try:
+            return pytz.timezone(local).zone
+        except pytz.exceptions.UnknownTimeZoneError:
+            pass
+
+
 @app.route('/')
 def index() -> str:
     """
     return string
     """
-    return render_template('5-index.html')
+    return render_template('7-index.html')
 
 
 if __name__ == "__main__":
